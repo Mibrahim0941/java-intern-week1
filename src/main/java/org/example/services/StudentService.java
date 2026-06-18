@@ -15,7 +15,7 @@ class StudentService{
         ValidateData(null, name, email, DOB, phone);
         Student student = new Student(idCounter++, name, email, DOB, phone);
         students.add(student);
-        System.out.println("Student added successfully with ID: " + student.getId());
+        System.out.println("Student added successfully with ID: " + student.getStudentID());
     }
 
     public List<Student> getAllStudents() {
@@ -24,7 +24,7 @@ class StudentService{
 
     public Student searchById(int id) {
         return students.stream()
-                .filter(s -> s.getId() == id)
+                .filter(s -> s.getStudentID() == id)
                 .findFirst()
                 .orElse(null);
     }
@@ -44,8 +44,8 @@ class StudentService{
 
         student.setName(name);
         student.setEmail(email);
-        student.setDateOfBirth(dob);
-        student.setMobileNumber(mobile);
+        student.setDoB(dob);
+        student.setPhoneNum(mobile);
         System.out.println("✔ Student details updated successfully!");
     }
 
@@ -58,7 +58,7 @@ class StudentService{
         return false;
     }
 
-    private void ValidateData(){
+    private void ValidateData(Integer id, String name, String email, LocalDate DOB, String phone){
 
     }
 }
