@@ -76,7 +76,7 @@ ID    | Name                 | Email                     | DOB          | Age  |
 1     | ibrahim              | mi094131@gmail.com        | 2005-03-22   | 21   | +923174876594
 ```
 
-###Search by ID and Name
+### Search by ID and Name
 ```text
 --------Student Management System--------
 1. Add Student
