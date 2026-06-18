@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class StudentService{
+public class StudentService{
     private final List<Student> students = new ArrayList<>();
     private int idCounter = 1;
 
