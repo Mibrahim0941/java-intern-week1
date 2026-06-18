@@ -1,10 +1,16 @@
 package org.example.model;
-import java.util.Date;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.time.LocalDate;
 
-class Student{
-    private String StudentID;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Student{
+    private int StudentID;
     protected String Name;
     protected String Email;
-    protected Date DoB;
+    protected LocalDate DoB;
     protected String PhoneNum;
 }
