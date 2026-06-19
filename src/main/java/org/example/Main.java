@@ -48,11 +48,12 @@ public class Main {
     }
 
     private static void AddStudent(){
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter Email: ");
-        String email = scanner.nextLine();
+        String name = ValidateName();
+
+        String email = ValidateEmail();
+
         LocalDate dob = parseDate();
+
         System.out.print("Enter Mobile Number (e.g., +923XXXXXXXXX): ");
         String phone = scanner.nextLine();
 
@@ -148,6 +149,41 @@ public class Main {
         }
     }
 
+    private static String ValidateName(){
+        while (true) {
+            System.out.print("Enter Student Name: ");
+            String name = scanner.nextLine().trim();
+            try {
+                if (name.length() < 3 || name.length() > 50) {
+                    throw new InvalidStudentDataException("Name must be 3 to 50 characters.");
+                }
+
+                if (!name.matches("[a-zA-Z ]+")) {
+                    throw new InvalidStudentDataException("Name must contain only alphabets and spaces.");
+                }
+                return name;
+            } catch (InvalidStudentDataException e) {
+                System.out.println("Error: " + e);
+            }
+        }
+    }
+
+    private static String ValidateEmail(){
+        while (true) {
+            System.out.print("Enter Student Email: ");
+            String email = scanner.nextLine().trim();
+            try {
+                if (email.trim().isEmpty())
+                    throw new InvalidStudentDataException("Email is mandatory.");
+                if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$"))
+                    throw new InvalidStudentDataException("Invalid email format.");
+                return email;
+            } catch (InvalidStudentDataException e) {
+                System.out.println("Error: " + e);
+            }
+        }
+    }
+
     private static LocalDate parseDate() {
         while (true) {
             System.out.print("Enter Date of Birth (YYYY-MM-DD): ");
@@ -160,12 +196,12 @@ public class Main {
     }
 
     private static void printStudentRow(Student s) {
-        System.out.printf("%-5d | %-20s | %-25s | %-12s | %-4d | %-15s\n",
+        System.out.printf("%-5d | %-20s | %-40s | %-12s | %-4d | %-15s\n",
                 s.getStudentID(), s.getName(), s.getEmail(), s.getDoB(), Period.between(s.getDoB(), LocalDate.now()).getYears(), s.getPhoneNum());
     }
 
     private static void printTableHeadings() {
-        System.out.printf("\n%-5s | %-20s | %-25s | %-12s | %-4s | %-15s\n", "ID", "Name", "Email", "DOB", "Age", "Mobile");
-        System.out.println("-".repeat(90));
+        System.out.printf("\n%-5s | %-20s | %-40s | %-12s | %-4s | %-15s\n", "ID", "Name", "Email", "DOB", "Age", "Mobile");
+        System.out.println("-".repeat(130));
     }
 }
