@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         while(true){
-            System.out.println("--------Student Management System--------");
+            System.out.println("\n\n--------Student Management System--------");
             System.out.println("1. Add Student");
             System.out.println("2. View All Students");
             System.out.println("3. Search Student by ID");
@@ -54,8 +54,7 @@ public class Main {
 
         LocalDate dob = parseDate();
 
-        System.out.print("Enter Mobile Number (e.g., +923XXXXXXXXX): ");
-        String phone = scanner.nextLine();
+        String phone = ValidatePhone();
 
         try{
             service.AddStudent(name, email, dob, phone);
@@ -163,7 +162,7 @@ public class Main {
                 }
                 return name;
             } catch (InvalidStudentDataException e) {
-                System.out.println("Error: " + e);
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -177,9 +176,31 @@ public class Main {
                     throw new InvalidStudentDataException("Email is mandatory.");
                 if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$"))
                     throw new InvalidStudentDataException("Invalid email format.");
+                boolean emailExists = service.getAllStudents().stream()
+                        .anyMatch(s -> s.getEmail().equalsIgnoreCase(email));
+                if (emailExists)
+                    throw new InvalidStudentDataException("Email address already exists.");
                 return email;
             } catch (InvalidStudentDataException e) {
-                System.out.println("Error: " + e);
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+
+    private static String ValidatePhone(){
+        while (true) {
+            System.out.print("Enter Phone Number (Format: +923XXXXXXXXX) : ");
+            String phone = scanner.nextLine().trim();
+            try {
+                if (phone.trim().isEmpty())
+                    throw new InvalidStudentDataException("Mobile number is mandatory.");
+                if (!phone.startsWith("+92"))
+                    throw new InvalidStudentDataException("Mobile number must start with +92");
+                if (!phone.matches("^\\+92\\d{10}$"))
+                    throw new InvalidStudentDataException("Mobile number must feature exactly 10 digits after +92 without letters or special characters.");
+                return phone;
+            } catch (InvalidStudentDataException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -187,9 +208,20 @@ public class Main {
     private static LocalDate parseDate() {
         while (true) {
             System.out.print("Enter Date of Birth (YYYY-MM-DD): ");
-            try {
-                return LocalDate.parse(scanner.nextLine().trim());
-            } catch (DateTimeParseException e) {
+            try{
+                LocalDate DOB = LocalDate.parse(scanner.nextLine().trim());
+                try {
+                    if (DOB.isAfter(LocalDate.now()))
+                        throw new InvalidStudentDataException("Date of Birth cannot be a future date.");
+
+                    int age = Period.between(DOB, LocalDate.now()).getYears();
+                    if (age < 5 || age > 60)
+                        throw new InvalidStudentDataException("Age must be between 5 and 60 years. Current calculated age: " + age);
+                    return DOB;
+                } catch (InvalidStudentDataException e) {
+                    System.out.println("Error : "+ e.getMessage());
+                }
+            }catch (DateTimeParseException e) {
                 System.out.println("Invalid Date format. Use YYYY-MM-DD (e.g., 2005-06-15)");
             }
         }
